@@ -7,6 +7,7 @@ kharon/hardware.py
 kharon/lexify.py
 kharon/makeproject.py
 kharon/parsify.py
+kharon/runtime.py
 kharon/soulmap.py
 kharon/template.ino
 kharon/types.py
