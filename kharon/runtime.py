@@ -23,9 +23,12 @@ def wrap(cfunc):
     def a(cfunc):
         channel = soul_map[cfunc.__name__]
         message = ''
+        message_format = ''
         for var,type in zip([locals()[arg] for arg in inspect.signature(cfunc).args],cfunc.types):
-            message += struct.pack(type.format_string, var)
-        ser.write(channel + message + channel)
+            message += var
+            message_format = type.format_string
+        to_send = struct.pack('bbbb'+message_format, channel, len(message), message)
+        ser.write(to_send)
 
         return ser.read()
 
