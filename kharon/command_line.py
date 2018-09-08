@@ -58,8 +58,9 @@ def upload(file_path, arduino_type="", to_search="Arduino"):
         status = os.system(
             " ".join(("arduino", "--board", arduino_type, "-- port", arduino_ports[0].device, "--upload", file_path)))
     else:
-        status = os.system(
-            " ".join(("arduino", "-- port", arduino_ports[0].device, "--upload", file_path)))
+        str = " ".join(("arduino", "-- port", arduino_ports[0].device, "--upload", file_path))
+        print(str)
+        status = os.system(str)
     if status == 1:
         print("Compilation/Upload Error")
     elif status == 2:
