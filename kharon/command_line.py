@@ -56,7 +56,7 @@ def upload(file_path, arduino_type="", to_search="Arduino"):
     # This might not work, we'll likely have to debug when rolling hardware out
     if arduino_type:
         status = os.system(
-            " ".join(("arduino", "--board", arduino_type, "-- port", arduino_ports[0].device, "--upload", file_path)))
+            " ".join(("arduino", "--board", arduino_type, "--port", arduino_ports[0].device, "--upload", file_path)))
     else:
         str = " ".join(("arduino", "--port", arduino_ports[0].device, "--upload", file_path))
         print(str)
