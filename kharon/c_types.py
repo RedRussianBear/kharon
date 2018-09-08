@@ -45,9 +45,15 @@ class Long(Type):
 TYPES = [Int, Float, Double, Char, Void, Short, Long]
 
 
-def parameter_types(func, *types):
-    func.types = list(types)
+def parameter_types(*types):
+    def editor(func):
+        func.types = list(types)
+
+    return editor
 
 
-def returns(func, return_type):
-    func.returns = return_type
+def returns(return_type):
+    def editor(func):
+        func.returns = return_type
+
+    return editor
