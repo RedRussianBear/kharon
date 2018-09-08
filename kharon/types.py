@@ -29,7 +29,3 @@ class Short(Type):
 class Long(Type):
     def to_c_string(self):
         return "long"
-
-class Double(Type):
-    def to_c_string(self):
-        return "double"
