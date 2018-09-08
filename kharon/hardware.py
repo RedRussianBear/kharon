@@ -2,12 +2,12 @@
 
 
 class Hardware:
-    def to_c_string(self):
+    def c(self):
         pass
 
 
 class Led(Hardware):
-    def to_c_string(self):
+    def c(self):
         pass
 
 
@@ -17,15 +17,15 @@ class AnalogPin(Hardware):
 
 
 class DigitalPin(Hardware):
-    def to_c_string(self):
+    def c(self):
         pass
 
 
 class Switch(Hardware):
-    def to_c_string(self):
+    def c(self):
         pass
 
 
 class Button(Hardware):
-    def to_c_string(self):
+    def c(self):
         pass

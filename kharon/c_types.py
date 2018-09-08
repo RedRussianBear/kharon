@@ -1,60 +1,68 @@
 class Type:
-    def Type(self, value):
+    def __init__(self, value):
         self.value = value
 
-    def to_c_string(self):
+    def c(self):
         pass
 
     format_string = ''
 
 
 class Int(Type):
-    def to_c_string(self):
+    def c(self):
         return "int"
 
     format_string = 'i'
 
 
-class float(Type):
-    def to_c_string(self):
+class Float(Type):
+    def c(self):
         return "float"
 
     format_string = 'f'
 
+
 class Double(Type):
-    def to_c_string(self):
+    def c(self):
         return "double"
 
     format_string = 'd'
 
 
 class Char(Type):
-    def to_c_string(self):
+    def c(self):
         return "char"
 
     format_string = 'c'
 
 
 class Void(Type):
-    def to_c_string(self):
+    def c(self):
         return "void"
 
     format_string = 'P'
 
 
 class Short(Type):
-    def to_c_string(self):
+    def c(self):
         return "short"
 
     format_string = 'h'
 
 
 class Long(Type):
-    def to_c_string(self):
+    def c(self):
         return "long"
 
     format_string = 'q'
 
 
-def fun_types(func, *types):
+TYPES = [Int, Float, Double, Char, Void, Short, Long]
+
+
+def parameter_types(func, *types):
     func.types = list(types)
+
+
+def returns(func, return_type):
+    func.returns = return_type
