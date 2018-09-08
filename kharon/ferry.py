@@ -26,7 +26,7 @@ def ferry_function(func, device):
         parameters += '%s %s' % (p_type.c, parameter)
 
     header = '%s %s(%s){\n' % (func.returns.c, name, parameters)
-    lines = inspect.getsourcelines(func)
+    lines = inspect.getsourcelines(func)[0]
 
     body = ''
     for line, next_line in zip(lines[1:], lines[2:] + ['']):
