@@ -1,6 +1,9 @@
 README.md
 setup.py
-kharon/__init__.py
+kharon/ferry.py
+kharon/hardware.py
+kharon/makeproject.py
+kharon/types.py
 kharon.egg-info/PKG-INFO
 kharon.egg-info/SOURCES.txt
 kharon.egg-info/dependency_links.txt
