@@ -2,6 +2,9 @@ import os
 from pkg_resources import resource_filename, Requirement
 from shutil import copy
 import argparse
+import serial
+import serial.tools.list_ports
+
 
 
 def kharon():
@@ -17,10 +20,10 @@ def kharon():
         help='The name of the new project'
     )
 
-    #set function corresponding to command
+    # set function corresponding to command
     parser_run.set_defaults(func=makeproject)
 
-    # run function correspondign to command
+    # run function corresponding to command
     args = parser.parse_args()
     args.func(args)
 
@@ -35,3 +38,37 @@ def makeproject(args):
         if not filename in ['__init__.py', '__pycache__']:
             print(template_path + filename)
             copy(template_path + filename, os.getcwd() + "/" + args.name + "/" + filename)
+
+
+def upload(file_path, arduino_type="", to_search="Arduino"):
+    arduino_ports = [
+        p
+        for p in serial.tools.list_ports.comports()
+        if to_search in p.description
+    ]
+
+    if not arduino_ports:
+        raise IOError("No Arduino detected")
+    if len(arduino_ports) > 1:
+        print("Use of multiple arduinos is not supported at this time. Apologies for any inconvenience.")
+    # Maybe ask user which one they want?
+
+    # This might not work, we'll likely have to debug when rolling hardware out
+    if arduino_type:
+        status = os.system(
+            " ".join(("arduino", "--board", arduino_type, "-- port", arduino_ports[0].device, "--upload", file_path)))
+    else:
+        status = os.system(
+            " ".join(("arduino", "-- port", arduino_ports[0].device, "--upload", file_path)))
+    if status == 1:
+        print("Compilation/Upload Error")
+    elif status == 2:
+        print("File not found")
+    elif status == 3:
+        print("Invalid argument")
+    elif status == 4:
+        print("oh no")
+    elif status == 0:
+        print("yay")
+    else:
+        print(status)
