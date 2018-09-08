@@ -13,7 +13,7 @@ BAUD_RATE = 9600
 ser = serial.Serial(DEVICE_LOCATION, BAUD_RATE)
 
 
-def reigster(device):
+def register(device):
     for cfunc in device.cfuncs:
         device.__dict__[cfunc.__name__] = wrap(cfunc)
 
