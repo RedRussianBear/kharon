@@ -2,7 +2,7 @@
 
 
 //Global declarations
-int channel;
+int channel, messageLen;
 
 //Hardware pin allocations
 
@@ -21,9 +21,12 @@ void loop(){
     //No Input
 
 
-    if(Serial.available() < 2){
+    if(Serial.available() >= 2){
         channel = Serial.read() << 8;
         channel += Serial.read();
+
+        messageLen = Serial.read() << 8;
+        messageLen += Serial.read();
 
         switch(channel){
             //InputCases
