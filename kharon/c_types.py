@@ -2,58 +2,43 @@ class Type:
     def __init__(self, value):
         self.value = value
 
-    def c(self):
-        pass
+    c = ''
 
     format_string = ''
 
 
 class Int(Type):
-    def c(self):
-        return "int"
-
+    c = "int"
     format_string = 'i'
 
 
 class Float(Type):
-    def c(self):
-        return "float"
-
+    c = "float"
     format_string = 'f'
 
 
 class Double(Type):
-    def c(self):
-        return "double"
-
+    c = "double"
     format_string = 'd'
 
 
 class Char(Type):
-    def c(self):
-        return "char"
-
+    c = "char"
     format_string = 'c'
 
 
 class Void(Type):
-    def c(self):
-        return "void"
-
+    c = "void"
     format_string = 'P'
 
 
 class Short(Type):
-    def c(self):
-        return "short"
-
+    c = "short"
     format_string = 'h'
 
 
 class Long(Type):
-    def c(self):
-        return "long"
-
+    c = "long"
     format_string = 'q'
 
 

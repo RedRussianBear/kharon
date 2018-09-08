@@ -11,7 +11,7 @@ def count_indent(line):
 REPLACEMENTS = [
     (r'\s+', r'\s'),
     *[(r'^([a-zA-Z_][a-zA-Z_0-9]*)\s?=\s?(%s)\(\)' % type_class.__name__,
-       r'%s \1;' % type_class.c()) for type_class in TYPES],
+       r'%s \1;' % type_class.c) for type_class in TYPES],
     (r'([a-z]+)\s(.*?):', r'\1\(\2\)'),
     (r' and ', r'&&'),
     (r' or ', r'||'),
@@ -23,9 +23,9 @@ def ferry_function(func, device):
     name = '%s_%s' % (device.__name__, func.__name__)
     parameters = ''
     for parameter, p_type in zip([p[0] for p in inspect.signature(func).parameters], func.types):
-        parameters += '%s %s' % (p_type.c(), parameter)
+        parameters += '%s %s' % (p_type.c, parameter)
 
-    header = '%s %s(%s){\n' % (func.returns.c(), name, parameters)
+    header = '%s %s(%s){\n' % (func.returns.c, name, parameters)
     lines = inspect.getsourcelines(func)
 
     body = ''
