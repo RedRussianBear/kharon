@@ -1,6 +1,72 @@
 import hashlib
 import inspect
 import copy
+import sys
+import re
+
+RESERVED = 'RESERVED'
+FLOAT = 'FLOAT'
+INT = 'INT'
+STRING = 'STRING'
+ID = 'ID'
+
+TOKENS = [
+    (r'(?!^)[\s\t]', None),
+    (r'#[^\n]*', None),
+    (r'\n', RESERVED),
+    (r'^[\s\t]+', RESERVED),
+    (r'=', RESERVED),
+    (r'\(', RESERVED),
+    (r'\)', RESERVED),
+    (r':', RESERVED),
+    (r'\+', RESERVED),
+    (r'-', RESERVED),
+    (r'\*', RESERVED),
+    (r'/', RESERVED),
+    (r'<=', RESERVED),
+    (r'<', RESERVED),
+    (r'>=', RESERVED),
+    (r'>', RESERVED),
+    (r'=', RESERVED),
+    (r'!=', RESERVED),
+    (r'and', RESERVED),
+    (r'or', RESERVED),
+    (r'not', RESERVED),
+    (r'if', RESERVED),
+    (r'else', RESERVED),
+    (r'while', RESERVED),
+    (r'def', RESERVED),
+    (r'[0-9]*\.[0-9]+', FLOAT),
+    (r'[0-9]+', INT),
+    (r'".*"', STRING),
+    (r'[a-zA-Z][a-zA-Z0-9]*', ID)
+]
+
+
+def make_lexer(token_expressions):
+    def lex(characters):
+        pos = 0
+        tokens = []
+        while pos < len(characters):
+            match = None
+            for token_expression in token_expressions:
+                pattern, tag = token_expression
+                regex = re.compile(pattern)
+                match = regex.match(characters, pos)
+                if match:
+                    text = match.group(0)
+                    if tag:
+                        token = (text, tag)
+                        tokens.append(token)
+                    break
+            if not match:
+                sys.stderr.write('Illegal character: %s\\n' % characters[pos])
+                sys.exit(1)
+            else:
+                pos = match.end(0)
+        return tokens
+
+    return lex
 
 
 class Symbol:
@@ -39,6 +105,11 @@ def gen_function_symtable(func, device_symtable):
 
     for parameter, p_type in zip([p[0] for p in inspect.signature(func).parameters], func.types):
         table[parameter] = Symbol(parameter, p_type)
+
+
+def lex_function(func):
+    lexer = make_lexer(TOKENS)
+    return lexer(inspect.getsource(func))
 
 
 def make_comm_map(device):
