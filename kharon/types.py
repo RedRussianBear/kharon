@@ -1,5 +1,3 @@
-import struct
-
 class Type:
     def Type(self, value):
         self.value = value

@@ -1,5 +1,7 @@
 import pyserial as serial
 import inspect
+import struct
+from functools import wraps
 
 # Placeholder JSON
 soul_map = {"device_name": "AB23"}
@@ -17,8 +19,14 @@ def reigster(device):
 
 
 def wrap(cfunc):
+    @wraps(cfunc)
     def a(cfunc):
         channel = soul_map[cfunc.__name__]
-        for var in [locals()[arg] for arg in inspect.signature(cfunc).args]:
-            struct.pack()
-        ser.write(channel+  +channel)
+        message = ''
+        for var,type in zip([locals()[arg] for arg in inspect.signature(cfunc).args],cfunc.types):
+            message += struct.pack(type.format_string, var)
+        ser.write(channel + message + channel)
+
+        return ser.read()
+
+    return a
