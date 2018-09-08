@@ -24,7 +24,7 @@ def wrap(cfunc):
         channel = soul_map[cfunc.__name__]
         message = []
         message_format = ''
-        for var,type in zip([locals()[arg] for arg in inspect.signature(cfunc).args],cfunc.types):
+        for var, type in zip([locals()[arg] for arg in inspect.signature(cfunc).args], cfunc.types):
             message += var
             message_format = type.format_string
 

@@ -4,6 +4,7 @@
 //Global declarations
 int channel, messageLen;
 
+
 //Hardware pin allocations
 
 
@@ -28,9 +29,11 @@ void loop(){
         messageLen = Serial.read() << 8;
         messageLen += Serial.read();
 
+        for(messageLen; messageLen > 0; messageLen--)
+
+
         switch(channel){
             //InputCases
-
 
         }
 

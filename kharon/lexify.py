@@ -18,6 +18,9 @@ TOKENS = [
     (r'\(', RESERVED),
     (r'\)', RESERVED),
     (r':', RESERVED),
+    (r';', RESERVED),
+    (r'?', RESERVED),
+    (r'!', RESERVED),
     (r',', RESERVED),
     (r'\.', RESERVED),
     (r'\+', RESERVED),
@@ -111,4 +114,10 @@ def gen_function_symtable(func, device_symtable):
 
 def lex_function(func):
     lexer = make_lexer(TOKENS)
-    return lexer(inspect.getsource(func))
+    lines = inspect.getsourcelines(func)
+    source = ''
+
+    for line in lines[1:]:
+        pass
+
+    return lexer(source)
