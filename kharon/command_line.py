@@ -3,6 +3,7 @@ from pkg_resources import resource_filename, Requirement
 from shutil import copy
 import argparse
 
+
 def kharon():
     parser = argparse.ArgumentParser(description='Create a new Kharon Project')
     parser.add_argument('command', action='store_true', help='The name of the new directory')
@@ -22,6 +23,7 @@ def kharon():
     # run function correspondign to command
     args = parser.parse_args()
     args.func(args)
+
 
 def makeproject(args):
     template_path = resource_filename(Requirement.parse("kharon"), "kharon/projecttemplates/")
