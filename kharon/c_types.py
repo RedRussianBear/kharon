@@ -48,6 +48,7 @@ TYPES = [Int, Float, Double, Char, Void, Short, Long]
 def parameter_types(*types):
     def editor(func):
         func.types = list(types)
+        return func
 
     return editor
 
@@ -55,5 +56,6 @@ def parameter_types(*types):
 def returns(return_type):
     def editor(func):
         func.returns = return_type
+        return func
 
     return editor
