@@ -1,4 +1,4 @@
-import pyserial as serial
+import serial
 import inspect
 import struct
 from functools import wraps
@@ -27,7 +27,10 @@ def wrap(cfunc):
         for var,type in zip([locals()[arg] for arg in inspect.signature(cfunc).args],cfunc.types):
             message += var
             message_format = type.format_string
-        to_send = struct.pack('bbbb'+message_format, channel, len(message), message)
+
+        to_send = bytes.fromhex(channel)
+        to_send += struct.pack('>h', len(message))
+        to_send += str.encode(message)
         ser.write(to_send)
 
         return ser.read()
