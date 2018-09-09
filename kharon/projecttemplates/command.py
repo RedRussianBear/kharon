@@ -8,78 +8,11 @@ import json
 from functools import wraps
 
 from kharon import ferry
-from kharon.ferry import get_functions
+from kharon.ferry import get_functions, name_function
 
 from .master import main
 from .devices import Device
 from .settings import BAUD_RATE
-
-
-def run_device(to_search="Arduino"):
-    soul_map = json.loads('soul_map.json')
-    arduino_ports = [
-        p.device
-        for p in serial.tools.list_ports.comports()
-        if to_search in p.description
-    ]
-    device_location = arduino_ports[0]
-
-    ser = serial.Serial(device_location, BAUD_RATE)
-
-    def register(device):
-        for func in get_functions(device):
-            device.__dict__[func[1].__name__] = wrap(func[1])
-
-    def wrap(func):
-        @wraps(func)
-        def a(funky):
-            channel = soul_map[func.__name__]
-            message = []
-            message_format = ''
-            for var, func_type in zip([locals()[arg] for arg in inspect.signature(func).args], func.types):
-                message += var
-                message_format = func_type.format_string
-
-            to_send = bytes.fromhex(channel)
-            to_send += struct.pack('>h', len(message))
-            to_send += str.encode(message)
-            ser.write(to_send)
-
-            return ser.read()
-
-        return a
-
-    register(Device)
-    main()
-
-
-parser = argparse.ArgumentParser(description='A CLI for Kharon Commands.')
-parser.add_argument('command', action='store_true', help='foo help')
-subparsers = parser.add_subparsers(help='sub-command help')
-
-# create the parser for the "run" command
-parser_run = subparsers.add_parser('run', help='Transpiles, compiles, and uploads code to relevant devices')
-parser_run.add_argument(
-    '--serial',
-    '-s',
-    type=str,
-    help='optional argument for what serial port is being used [e.g. /dev/TTY0, /com3, etc.]'
-)
-parser_run.set_defaults(func=run_device)
-
-# create the parser for the "ferry_souls" command
-parser_ferry_souls = subparsers.add_parser('ferry_souls', help='')
-
-
-def ferry_souls():
-    ferry.assemble(Device)
-    compile_and_upload('souls.ino')
-
-
-parser_ferry_souls.set_defaults(func=ferry_souls)
-
-args = parser.parse_args()
-args.func(args)
 
 
 def compile_and_upload(file_path, arduino_type="", to_search="Arduino"):
@@ -115,3 +48,72 @@ def compile_and_upload(file_path, arduino_type="", to_search="Arduino"):
         print("yay")
     else:
         print(status)
+
+
+def run_device(args, to_search="Arduino"):
+    soul_map = json.load(open('soul_map.json'))
+    arduino_ports = [
+        p.device
+        for p in serial.tools.list_ports.comports()
+        if to_search in p.description
+    ]
+    device_location = arduino_ports[0]
+
+    ser = serial.Serial(device_location, BAUD_RATE)
+
+    def wrap(func):
+        @wraps(func)
+        def a(*argyles):
+            channel = soul_map[name_function(func, Device)]
+            message_format = ''
+
+            for func_type in func.types:
+                message_format += '<' + func_type.format_string
+
+            to_send = struct.pack('<H', int(channel, 16))
+            to_send += struct.pack('<H', struct.calcsize(message_format))
+
+            to_send += struct.pack(message_format, *(argyles[1:]))
+            print(to_send)
+            print(type(to_send))
+            print(ser.write(to_send))
+
+            return ser.readline()
+
+        return a
+
+    def register(device):
+        for func in get_functions(device):
+            setattr(device, func[0], wrap(func[1]))
+
+    register(Device)
+    main()
+
+
+parser = argparse.ArgumentParser(description='A CLI for Kharon Commands.')
+parser.add_argument('command', action='store_true', help='foo help')
+subparsers = parser.add_subparsers(help='sub-command help')
+
+# create the parser for the "run" command
+parser_run = subparsers.add_parser('run', help='Transpiles, compiles, and uploads code to relevant devices')
+parser_run.add_argument(
+    '--serial',
+    '-s',
+    type=str,
+    help='optional argument for what serial port is being used [e.g. /dev/TTY0, /com3, etc.]'
+)
+parser_run.set_defaults(func=run_device)
+
+# create the parser for the "ferry_souls" command
+parser_ferry_souls = subparsers.add_parser('ferry_souls', help='')
+
+
+def ferry_souls(args):
+    ferry.assemble(Device)
+    compile_and_upload('souls.ino')
+
+
+parser_ferry_souls.set_defaults(func=ferry_souls)
+
+args = parser.parse_args()
+args.func(args)
