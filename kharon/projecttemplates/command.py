@@ -104,8 +104,8 @@ parser_run.add_argument(
 )
 parser_run.set_defaults(func=run_device)
 
-# create the parser for the "ferry_souls" command
-parser_ferry_souls = subparsers.add_parser('ferry_souls', help='')
+# create the parser for the "ferry" command
+parser_ferry = subparsers.add_parser('ferry', help='')
 
 
 def ferry_souls(args):
@@ -113,7 +113,7 @@ def ferry_souls(args):
     compile_and_upload('souls.ino')
 
 
-parser_ferry_souls.set_defaults(func=ferry_souls)
+parser_ferry.set_defaults(func=ferry_souls)
 
 args = parser.parse_args()
 args.func(args)
