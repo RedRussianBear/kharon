@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='kharon',
-      version='0.1.5.0',
+      version='0.1.5.11',
       description='Simplifying hardware/iot development with a Django style batteries-included framework',
       url='https://github.com/RedRussianBear/kharon',
       author='Mikhail Khrenov, Sahil Kochar, Shriyash Upadhyay',

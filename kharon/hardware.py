@@ -30,7 +30,7 @@ class AnalogPin(Hardware):
         super(AnalogPin, self).__init__()
 
     def setup(self):
-        return 'pinMode(%d, %s)' % (self.pin_number, self.mode)
+        return 'pinMode(%d, %s);' % (self.pin_number, self.mode)
 
     def read(self):
         return 'analogRead(%d' % self.pin_number
@@ -45,7 +45,7 @@ class DigitalPin(Hardware):
         super(DigitalPin, self).__init__()
 
     def setup(self):
-        return 'pinMode(%d, %s)' % (self.pin_number, self.mode)
+        return 'pinMode(%d, %s);' % (self.pin_number, self.mode)
 
     def write(self, mode=LOW):
         return 'digitalWrite(%d, ' % self.pin_number

@@ -31,20 +31,22 @@ def make_function_head(func, device):
 def ferry_function(func, device):
     replacements = [
         (r'\s+', r' '),
+        (r'self\.', r''),
+        (r'time\.sleep\(([0-9]+)\)', r'delay(\1);'),
         *[(r's*([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*%s\(\)' % type_class.__name__,
            r'%s \1;' % type_class.c) for type_class in TYPES],
-        *[(r's*(self\.)?([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*%s\((.+)\)' % type_class.__name__,
-           r'%s \2 = \3;' % type_class.c) for type_class in TYPES],
-        (r'(s*[a-zA-Z_][a-zA-Z_0-9]*\s*=\s*.*?)$', r'\1;'),
+        *[(r's*([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*%s\((.+)\)' % type_class.__name__,
+           r'%s \1 = \2;' % type_class.c) for type_class in TYPES],
+        (r'(s*[a-zA-Z_][a-zA-Z_0-9]*\s*=\s+.*?)$', r'\1;'),
         (r'(s*return\s*.*?)$', r'\1;'),
         (r'([a-z]+)\s(.*?):', r'\1(\2)'),
         (r's*print\((.*?)\)', r'Serial.println(\1);'),
         (r' and ', r'&&'),
         (r' or ', r'||'),
         (r' not ', r'!'),
-        *[(r'\s*self.%s.%s\((.*?)\)\s*$' % (member[0], funky[0]), r'%s(\1);' % funky[1]()) for member in
+        *[(r'\s*%s.%s\((.*?)\)\s*$' % (member[0], funky[0]), r'%s\1);' % funky[1]()) for member in
           get_members(device) for funky in get_functions(member[1])],
-        *[(r'self.%s.%s\((.*?)\)' % (member[0], funky[0]), r'%s\1)' % funky[1]()) for member in
+        *[(r'%s.%s\((.*?)\)' % (member[0], funky[0]), r'%s\1)' % funky[1]()) for member in
           get_members(device) for funky in get_functions(member[1])],
 
     ]
@@ -110,7 +112,7 @@ def make_comm_case(func, device, channel):
         parameters += '%s_struct.%s, ' % (name, parameter)
     parameters = parameters[:-2]
 
-    return 'case %d:\n memcpy((void*) &%s_struct,(void*) message, messageLen);\n Serial.println(%s(%s));\n   \n break;' \
+    return 'case %d:\n memcpy((void*) &%s_struct,(void*) message, messageLen);\n Serial.flush();\n Serial.println(%s(%s));\n   \n break;\n\n' \
            % (channel, name, name, parameters)
 
 
