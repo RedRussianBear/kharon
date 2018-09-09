@@ -2,18 +2,20 @@
 //IMPORTS
 
 //Global declarations
-unsigned int channel, messageLen;
-int ledPin = 13;
 byte message[128];
 //GLOBALS
 
+
+struct Gen {
+  unsigned int channel;
+  unsigned int messageLen;
+  } general;
 
 //Functions
 //FUNCTIONS
 
 void setup(){
     Serial.begin(9600);
-    pinMode(ledPin, OUTPUT);
 
     //Setup
     //SETUP
@@ -24,17 +26,19 @@ void loop(){
     //No Input
 
 
-    if(Serial.available() >= 2){
+    if(Serial.available() >= 4){
         delay(500);
-        channel = Serial.read();
-        channel += Serial.read() << 8;
+        Serial.readBytes((char*)&general, 4);
 
-        messageLen = Serial.read();
-        messageLen += Serial.read() << 8;
+        unsigned int channel = general.channel;
+        unsigned int messageLen = general.messageLen;
 
-        int i;
-        for(i = 0; i < messageLen; i++)
-            message[i] = Serial.read();
+        Serial.println(channel);
+        Serial.println(messageLen);
+
+        Serial.readBytes((char*)&message, messageLen);
+
+        Serial.println((char *)message)
 
 
 
@@ -42,12 +46,6 @@ void loop(){
             //Input Cases
             //CASES
 
-            default:
-                digitalWrite(ledPin, HIGH);
-                delay(1000);
-                digitalWrite(ledPin, LOW);
-                delay(1000);
-                break;
         }
     }
 

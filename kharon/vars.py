@@ -32,7 +32,7 @@ class Numeric(Primitive):
 
 class Int(Numeric):
     c = "int"
-    format_string = 'i'
+    format_string = 'h'
 
 
 class Float(Numeric):
