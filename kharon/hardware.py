@@ -32,21 +32,26 @@ class AnalogPin(Hardware):
     def setup(self):
         return 'pinMode(%d, %s)' % (self.pin_number, self.mode)
 
+    def read(self):
+        return 'analogRead(%d' % self.pin_number
+
 
 class DigitalPin(Hardware):
     c = ''
 
+    def __init__(self, pin_number, mode):
+        self.pin_number = pin_number
+        self.mode = mode
+        super(DigitalPin, self).__init__()
 
-class Led(Hardware):
-    c = ''
+    def setup(self):
+        return 'pinMode(%d, %s)' % (self.pin_number, self.mode)
 
+    def write(self, mode=LOW):
+        return 'digitalWrite(%d, ' % self.pin_number
 
-class Switch(Hardware):
-    c = ''
-
-
-class Button(Hardware):
-    c = ''
+    def read(self):
+        return 'digitalRead(%d' % self.pin_number
 
 
 class Servo(Hardware):
@@ -64,7 +69,7 @@ class Servo(Hardware):
         return '%s.attach(%d);' % (self.name, self.pin_number)
 
     def write(self, angle=0):
-        return '%s.write' % self.name
+        return '%s.write(' % self.name
 
 
-HARDWARE = [AnalogPin, DigitalPin, Led, Switch, Button, Servo]
+HARDWARE = [AnalogPin, DigitalPin, Servo]

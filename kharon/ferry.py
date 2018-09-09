@@ -33,8 +33,8 @@ def ferry_function(func, device):
         (r'\s+', r' '),
         *[(r's*([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*%s\(\)' % type_class.__name__,
            r'%s \1;' % type_class.c) for type_class in TYPES],
-        *[(r's*([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*%s\((.+)\)' % type_class.__name__,
-           r'%s \1 = \2;' % type_class.c) for type_class in TYPES],
+        *[(r's*(self\.)?([a-zA-Z_][a-zA-Z_0-9]*)\s*=\s*%s\((.+)\)' % type_class.__name__,
+           r'%s \2 = \3;' % type_class.c) for type_class in TYPES],
         (r'(s*[a-zA-Z_][a-zA-Z_0-9]*\s*=\s*.*?)$', r'\1;'),
         (r'(s*return\s*.*?)$', r'\1;'),
         (r'([a-z]+)\s(.*?):', r'\1(\2)'),
@@ -44,7 +44,7 @@ def ferry_function(func, device):
         (r' not ', r'!'),
         *[(r'\s*self.%s.%s\((.*?)\)\s*$' % (member[0], funky[0]), r'%s(\1);' % funky[1]()) for member in
           get_members(device) for funky in get_functions(member[1])],
-        *[(r'self.%s.%s\((.*?)\)' % (member[0], funky[0]), r'%s(\1)' % funky[1]()) for member in
+        *[(r'self.%s.%s\((.*?)\)' % (member[0], funky[0]), r'%s\1)' % funky[1]()) for member in
           get_members(device) for funky in get_functions(member[1])],
 
     ]
