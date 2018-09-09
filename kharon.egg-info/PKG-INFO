@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: kharon
-Version: 0.1.4.0
+Version: 0.1.4.1
 Summary: Simplifying hardware/iot development with a Django style batteries-included framework
 Home-page: https://github.com/RedRussianBear/kharon
 Author: Mikhail Khrenov, Sahil Kochar, Shriyash Upadhyay

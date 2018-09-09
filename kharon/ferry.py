@@ -3,6 +3,7 @@ import re
 from pkg_resources import resource_filename, Requirement
 from .vars import TYPES
 import hashlib
+import json
 
 
 def count_indent(line):
@@ -113,41 +114,43 @@ def make_comm_case(func, device, channel):
            % (channel, name, name, parameters)
 
 
-def assemble(module):
-    devices = [x[1] for x in inspect.getmembers(module, inspect.isclass) if x[1].__module__ == module.__name__]
+def assemble(device):
     template = open(resource_filename(Requirement.parse("kharon"), "kharon/template.ino")).read()
 
-    for device in devices:
-        dev_ino = template + '\n'
-        members = [x for x in get_members(device)]
-        functions = [x[1] for x in get_functions(device)]
+    dev_ino = template + '\n'
+    members = [x for x in get_members(device)]
+    functions = [x[1] for x in get_functions(device)]
 
-        declarations = ''
-        setup = ''
-        requires = {''}
-        for member in members:
-            declarations += member[1].declaration() + '\n'
-            setup += member[1].setup() + '\n'
-            requires.add(member[1].requires)
-        imports = ''
-        for require in requires:
-            imports += require + '\n'
-        dev_ino = re.sub('//GLOBALS', declarations, dev_ino)
-        dev_ino = re.sub('//SETUP', setup, dev_ino)
-        dev_ino = re.sub('//IMPORTS', imports, dev_ino)
+    declarations = ''
+    setup = ''
+    requires = {''}
+    for member in members:
+        declarations += member[1].declaration() + '\n'
+        setup += member[1].setup() + '\n'
+        requires.add(member[1].requires)
+    imports = ''
+    for require in requires:
+        imports += require + '\n'
+    dev_ino = re.sub('//GLOBALS', declarations, dev_ino)
+    dev_ino = re.sub('//SETUP', setup, dev_ino)
+    dev_ino = re.sub('//IMPORTS', imports, dev_ino)
 
-        soul_map = make_soul_map(device)
+    soul_map = make_soul_map(device)
 
-        statement = ''
-        implementation = ''
-        structs = ''
-        cases = ''
-        for func in functions:
-            statement += make_function_head(func, device) + ';\n'
-            implementation += ferry_function(func, device) + '\n'
-            structs += make_param_struct(func, device)
-            cases += make_comm_case(func, device, int(soul_map[name_function(func, device)], 16))
-        dev_ino = re.sub('//FUNCTIONS', statement + '\n' + implementation + '\n' + structs, dev_ino)
-        dev_ino = re.sub('//CASES', cases, dev_ino)
+    with open("soul_map.json", 'w+') as f:
+        f.write(json.dumps(soul_map))
 
-        print(dev_ino)
+    statement = ''
+    implementation = ''
+    structs = ''
+    cases = ''
+    for func in functions:
+        statement += make_function_head(func, device) + ';\n'
+        implementation += ferry_function(func, device) + '\n'
+        structs += make_param_struct(func, device)
+        cases += make_comm_case(func, device, int(soul_map[name_function(func, device)], 16))
+    dev_ino = re.sub('//FUNCTIONS', statement + '\n' + implementation + '\n' + structs, dev_ino)
+    dev_ino = re.sub('//CASES', cases, dev_ino)
+
+    with open('souls.ino', 'w+') as f:
+        f.write(dev_ino)
