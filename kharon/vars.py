@@ -1,43 +1,66 @@
 class Type:
-    def __init__(self, value):
+    c = ''
+    format_string = ''
+    requires = ''
+    name = ''
+
+    def __init__(self, value=0):
         self.value = value
 
-    c = ''
+    def declaration(self):
+        pass
 
-    format_string = ''
+    def setup(self):
+        pass
 
 
-class Int(Type):
+class Primitive(Type):
+    def declaration(self):
+        return '%s %s = %d;' % (self.c, self.name, self.value)
+
+    def setup(self):
+        return ''
+
+
+class Numeric(Primitive):
+    def __mul__(self, other):
+        return None
+
+    def __add__(self, other):
+        return None
+
+
+class Int(Numeric):
     c = "int"
     format_string = 'i'
 
 
-class Float(Type):
+class Float(Numeric):
     c = "float"
     format_string = 'f'
 
 
-class Double(Type):
+class Double(Numeric):
     c = "double"
     format_string = 'd'
 
 
-class Char(Type):
+class Char(Primitive):
     c = "char"
     format_string = 'c'
 
 
-class Void(Type):
+class Void(Primitive):
     c = "void"
     format_string = 'P'
 
 
-class Short(Type):
+class Short(Numeric):
     c = "short"
     format_string = 'h'
 
 
-class Long(Type):
+class Long(Numeric):
     c = "long"
     format_string = 'q'
 

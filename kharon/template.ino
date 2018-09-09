@@ -1,20 +1,20 @@
 //Imports
-
+//IMPORTS
 
 //Global declarations
 int channel, messageLen;
-
-
-//Hardware pin allocations
+byte message[128];
+//GLOBALS
 
 
 //Functions
-
+//FUNCTIONS
 
 void setup(){
     Serial.begin(9600);
 
     //Setup
+    //SETUP
 }
 
 void loop(){
@@ -29,14 +29,17 @@ void loop(){
         messageLen = Serial.read() << 8;
         messageLen += Serial.read();
 
-        for(messageLen; messageLen > 0; messageLen--)
+        int i;
+        for(i = 0; i < messageLen; i++)
+            message[i] = Serial.read();
+
 
 
         switch(channel){
-            //InputCases
+            //Input Cases
+            //CASES
 
         }
-
     }
 
 }

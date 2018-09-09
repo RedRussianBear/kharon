@@ -1,7 +1,6 @@
 README.md
 setup.py
 kharon/__init__.py
-kharon/c_types.py
 kharon/command_line.py
 kharon/compilify.py
 kharon/ferry.py
@@ -12,6 +11,7 @@ kharon/parsify.py
 kharon/runtime.py
 kharon/soulmap.py
 kharon/template.ino
+kharon/vars.py
 kharon.egg-info/PKG-INFO
 kharon.egg-info/SOURCES.txt
 kharon.egg-info/dependency_links.txt
