@@ -2,8 +2,6 @@ import os
 from pkg_resources import resource_filename, Requirement
 from shutil import copy
 import argparse
-import serial
-import serial.tools.list_ports
 
 
 def kharon():
@@ -37,6 +35,3 @@ def make_project(args):
         if not filename in ['__init__.py', '__pycache__']:
             print(template_path + filename)
             copy(template_path + filename, os.getcwd() + "/" + args.name + "/" + filename)
-
-
-

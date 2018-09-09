@@ -78,7 +78,7 @@ def run_device(args, to_search="Arduino"):
             print(type(to_send))
             print(ser.write(to_send))
 
-            return ser.readline()
+            return eval(ser.readline())
 
         return a
 
