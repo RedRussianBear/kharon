@@ -2,7 +2,8 @@
 //IMPORTS
 
 //Global declarations
-int channel, messageLen;
+unsigned int channel, messageLen;
+int ledPin = 13;
 byte message[128];
 //GLOBALS
 
@@ -12,6 +13,7 @@ byte message[128];
 
 void setup(){
     Serial.begin(9600);
+    pinMode(ledPin, OUTPUT);
 
     //Setup
     //SETUP
@@ -23,11 +25,12 @@ void loop(){
 
 
     if(Serial.available() >= 2){
-        channel = Serial.read() << 8;
-        channel += Serial.read();
+        delay(500);
+        channel = Serial.read();
+        channel += Serial.read() << 8;
 
-        messageLen = Serial.read() << 8;
-        messageLen += Serial.read();
+        messageLen = Serial.read();
+        messageLen += Serial.read() << 8;
 
         int i;
         for(i = 0; i < messageLen; i++)
@@ -39,6 +42,12 @@ void loop(){
             //Input Cases
             //CASES
 
+            default:
+                digitalWrite(ledPin, HIGH);
+                delay(1000);
+                digitalWrite(ledPin, LOW);
+                delay(1000);
+                break;
         }
     }
 
