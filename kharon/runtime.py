@@ -1,7 +1,8 @@
-import pyserial as serial
+import serial
 import inspect
 import struct
 from functools import wraps
+from .ferry import get_functions
 
 # Placeholder JSON
 soul_map = {"device_name": "AB23"}
@@ -14,17 +15,17 @@ ser = serial.Serial(DEVICE_LOCATION, BAUD_RATE)
 
 
 def register(device):
-    for cfunc in device.cfuncs:
-        device.__dict__[cfunc.__name__] = wrap(cfunc)
+    for func in get_functions(device):
+        device.__dict__[func[1].__name__] = wrap(func[1])
 
 
-def wrap(cfunc):
-    @wraps(cfunc)
-    def a(cfunc):
-        channel = soul_map[cfunc.__name__]
+def wrap(func):
+    @wraps(func)
+    def a(funky):
+        channel = soul_map[func.__name__]
         message = []
         message_format = ''
-        for var, type in zip([locals()[arg] for arg in inspect.signature(cfunc).args], cfunc.types):
+        for var, type in zip([locals()[arg] for arg in inspect.signature(func).args], func.types):
             message += var
             message_format = type.format_string
 

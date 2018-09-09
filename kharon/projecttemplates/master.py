@@ -1,3 +1,5 @@
-import devices
+from .devices import Device
 
-main()
+# put your OS-side code here!
+
+def main():
