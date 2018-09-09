@@ -110,7 +110,7 @@ def make_comm_case(func, device, channel):
         parameters += '%s_struct.%s, ' % (name, parameter)
     parameters = parameters[:-2]
 
-    return 'case %d:\n memcpy(&%s_struct, message, messageLen);\n %s(%s);\n   \n break;' \
+    return 'case %d:\n memcpy((void*) &%s_struct,(void*) message, messageLen);\n Serial.println(%s(%s));\n   \n break;' \
            % (channel, name, name, parameters)
 
 

@@ -33,14 +33,7 @@ void loop(){
         unsigned int channel = general.channel;
         unsigned int messageLen = general.messageLen;
 
-        Serial.println(channel);
-        Serial.println(messageLen);
-
         Serial.readBytes((char*)&message, messageLen);
-
-        Serial.println((char *)message)
-
-
 
         switch(channel){
             //Input Cases
