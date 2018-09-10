@@ -2,7 +2,6 @@ import argparse
 import serial
 import serial.tools.list_ports
 import os
-import inspect
 import struct
 import json
 from functools import wraps
@@ -50,7 +49,7 @@ def compile_and_upload(file_path, arduino_type="", to_search="Arduino"):
         print(status)
 
 
-def run_device(args, to_search="Arduino"):
+def run_device(arguments, to_search="Arduino"):
     soul_map = json.load(open('soul_map.json'))
     arduino_ports = [
         p.device
@@ -70,13 +69,12 @@ def run_device(args, to_search="Arduino"):
             for func_type in func.types:
                 message_format += '<' + func_type.format_string
 
-            to_send = struct.pack('<H', int(channel, 16))
+            to_send = struct.pack('<H', int(channel))
             to_send += struct.pack('<H', struct.calcsize(message_format))
 
             to_send += struct.pack(message_format, *(argyles[1:]))
             print(to_send)
-            print(type(to_send))
-            print(ser.write(to_send))
+            ser.write(to_send)
 
             return eval(ser.readline())
 
@@ -108,7 +106,7 @@ parser_run.set_defaults(func=run_device)
 parser_ferry = subparsers.add_parser('ferry', help='')
 
 
-def ferry_souls(args):
+def ferry_souls(arguments):
     ferry.assemble(Device)
     compile_and_upload('souls.ino')
 

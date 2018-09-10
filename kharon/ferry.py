@@ -2,7 +2,6 @@ import inspect
 import re
 from pkg_resources import resource_filename, Requirement
 from .vars import TYPES
-import hashlib
 import json
 
 
@@ -89,10 +88,10 @@ def get_members(c):
 def make_soul_map(device):
     soul_map = {}
 
+    c = 1
     for func in get_functions(device):
-        m = hashlib.md5()
-        m.update(name_function(func[1], device).encode(encoding='ascii'))
-        soul_map[name_function(func[1], device)] = m.hexdigest()[:4]
+        soul_map[name_function(func[1], device)] = c
+        c += 1
     return soul_map
 
 
@@ -112,8 +111,8 @@ def make_comm_case(func, device, channel):
         parameters += '%s_struct.%s, ' % (name, parameter)
     parameters = parameters[:-2]
 
-    return 'case %d:\n memcpy((void*) &%s_struct,(void*) message, messageLen);\n Serial.flush();\n Serial.println(%s(%s));\n   \n break;\n\n' \
-           % (channel, name, name, parameters)
+    return 'case %d:\n memcpy((void*) &%s_struct,(void*) message, messageLen);\n Serial.flush();\n Serial.println(%s(' \
+           '%s));\n   \n break;\n\n' % (channel, name, name, parameters)
 
 
 def assemble(device):
@@ -150,7 +149,7 @@ def assemble(device):
         statement += make_function_head(func, device) + ';\n'
         implementation += ferry_function(func, device) + '\n'
         structs += make_param_struct(func, device)
-        cases += make_comm_case(func, device, int(soul_map[name_function(func, device)], 16))
+        cases += make_comm_case(func, device, soul_map[name_function(func, device)])
     dev_ino = re.sub('//FUNCTIONS', statement + '\n' + implementation + '\n' + structs, dev_ino)
     dev_ino = re.sub('//CASES', cases, dev_ino)
 

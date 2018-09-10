@@ -26,12 +26,12 @@ def kharon():
 
 
 def make_project(args):
-    template_path = resource_filename(Requirement.parse("kharon"), "kharon/projecttemplates/")
+    template_path = resource_filename(Requirement.parse("kharon"), "kharon/project_templates/")
     template_files = os.listdir(template_path)
 
     os.mkdir(os.getcwd() + "/" + args.name)
 
     for filename in template_files:
-        if not filename in ['__init__.py', '__pycache__']:
+        if filename not in ['__init__.py', '__pycache__']:
             print(template_path + filename)
             copy(template_path + filename, os.getcwd() + "/" + args.name + "/" + filename)
