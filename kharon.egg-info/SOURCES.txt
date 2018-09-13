@@ -11,9 +11,10 @@ kharon.egg-info/SOURCES.txt
 kharon.egg-info/dependency_links.txt
 kharon.egg-info/entry_points.txt
 kharon.egg-info/not-zip-safe
+kharon.egg-info/requires.txt
 kharon.egg-info/top_level.txt
-kharon/projecttemplates/__init__.py
-kharon/projecttemplates/command.py
-kharon/projecttemplates/devices.py
-kharon/projecttemplates/master.py
-kharon/projecttemplates/settings.py
+kharon/project_templates/__init__.py
+kharon/project_templates/command.py
+kharon/project_templates/devices.py
+kharon/project_templates/master.py
+kharon/project_templates/settings.py
