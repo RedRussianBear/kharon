@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='kharon',
-      version='0.1.5.14',
+      version='0.1.5.16',
       description='Simplifying hardware/iot development with a Django style batteries-included framework',
       url='https://github.com/RedRussianBear/kharon',
       author='Mikhail Khrenov, Sahil Kochar, Shriyash Upadhyay',

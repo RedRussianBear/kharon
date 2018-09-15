@@ -129,6 +129,7 @@ def assemble(device):
         declarations += member[1].declaration() + '\n'
         setup += member[1].setup() + '\n'
         requires.add(member[1].requires)
+    setup += '\n__init__();\n'
     imports = ''
     for require in requires:
         imports += require + '\n'
